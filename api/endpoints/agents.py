@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import os, uuid, json, shutil
 from genagents.genagents import GenerativeAgent
+from typing import List, Optional
+
 
 router = APIRouter()
 AGENTS_DIR = "agent_bank/custom_agents"
@@ -14,6 +16,7 @@ class AgentCreateRequest(BaseModel):
     age: int
     occupation: str
     interests: list[str]
+    tags: Optional[List[str]] = []
 
 class AgentUpdateRequest(BaseModel):
     age: int | None = None
