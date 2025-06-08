@@ -1,48 +1,55 @@
 <template>
-  <main dir="rtl" style="font-family: Vazirmatn, Tahoma; max-width: 800px; margin: auto; padding: 2rem;">
-    <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">🧠 ساخت شخصیت جدید</h1>
+  <main dir="rtl" class="p-4" style="font-family: Vazirmatn, Tahoma">
+    <h2 class="text-xl font-bold mb-4">ساخت شخصیت جدید</h2>
 
-    <!-- فرم اطلاعات پایه -->
-    <form @submit.prevent="createAgent" style="display: grid; gap: 0.75rem;">
-      <input v-model="form.first_name" placeholder="نام" required />
-      <input v-model="form.last_name" placeholder="نام خانوادگی" required />
-      <input v-model="form.age" placeholder="سن" type="number" required />
-      <input v-model="form.occupation" placeholder="شغل" />
-      <input v-model="form.interests" placeholder="علایق (با کاما جدا کنید)" />
-    </form>
+    <div class="mb-4">
+      <label>نام:</label>
+      <input v-model="form.first_name" class="input" type="text" />
+    </div>
+    <div class="mb-4">
+      <label>نام خانوادگی:</label>
+      <input v-model="form.last_name" class="input" type="text" />
+    </div>
+    <div class="mb-4">
+      <label>سن:</label>
+      <input v-model="form.age" class="input" type="number" />
+    </div>
+    <div class="mb-4">
+      <label>شغل:</label>
+      <input v-model="form.occupation" class="input" type="text" />
+    </div>
+    <div class="mb-4">
+      <label>علاقه‌مندی‌ها (با ویرگول جدا کنید):</label>
+      <input v-model="form.interests" class="input" type="text" />
+    </div>
 
-    <!-- بخش انتخاب تگ‌ها -->
-    <h2 style="margin-top: 2rem;">🏷️ انتخاب برچسب‌ها (تگ‌ها)</h2>
-    <div v-for="(options, category) in tags" :key="category" style="margin-top: 1rem;">
-      <h3 style="font-weight: bold;">{{ getCategoryLabel(category) }}</h3>
-      <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-        <label v-for="tag in options" :key="tag">
-          <input type="checkbox" :value="tag" v-model="selectedTags[category]" />
+    <h3 class="font-bold mt-6 mb-2">🏷️ تگ‌های شخصیت</h3>
+    <div v-for="(group, groupName) in tagGroups" :key="groupName" class="mb-4">
+      <label class="font-semibold">{{ groupName }}:</label>
+      <div class="flex flex-wrap gap-2 mt-1">
+        <label v-for="tag in group" :key="tag">
+          <input type="checkbox" :value="tag" v-model="selectedTags[groupName]" />
           {{ tag }}
         </label>
       </div>
     </div>
 
-    <!-- تگ سفارشی -->
-    <div style="margin-top: 1rem;">
-      <input v-model="customTag" placeholder="تگ دلخواه را وارد کنید..." />
-      <button @click="addCustomTag" style="margin-right: 0.5rem;">➕ افزودن تگ دلخواه</button>
-    </div>
+    <BigFive ref="bigfive" />
+    <GSS ref="gss" />
 
-    <!-- نمایش تگ‌های انتخاب‌شده -->
-    <div v-if="allSelectedTags.length" style="margin-top: 1rem;">
-      <strong>تگ‌های انتخاب‌شده:</strong>
-      <span v-for="t in allSelectedTags" :key="t" style="margin-left: 0.5rem;">{{ t }}</span>
-    </div>
-
-    <button @click="createAgent" style="margin-top: 2rem; padding: 0.5rem 1rem;">📨 ثبت شخصیت</button>
+    <button @click="createAgent" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">📨 ثبت شخصیت</button>
   </main>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive } from 'vue'
+import BigFive from './components/BigFive.vue'
+import GSS from './components/GSS.vue'
 
-const form = ref({
+const bigfive = ref(null)
+const gss = ref(null)
+
+const form = reactive({
   first_name: '',
   last_name: '',
   age: '',
@@ -50,68 +57,61 @@ const form = ref({
   interests: ''
 })
 
-const tags = ref({})
-const selectedTags = ref({})
-const customTag = ref('')
-const allSelectedTags = ref([])
-
-onMounted(async () => {
-  const res = await fetch('/tags.json')
-  tags.value = await res.json()
-
-  for (const category in tags.value) {
-    selectedTags.value[category] = []
-  }
-})
-
-function addCustomTag() {
-  if (customTag.value.trim()) {
-    selectedTags.value.custom_tags.push(customTag.value.trim())
-    customTag.value = ''
-  }
-  collectTags()
+const tagGroups = {
+  مذهبی: ['شیعه', 'سنی', 'بی‌تفاوت مذهبی', 'پایبند به مناسک', 'مذهبی انعطاف‌پذیر', 'رادیکال', 'ضد دین'],
+  سیاسی: ['اصولگرا', 'اصلاح‌طلب', 'انقلابی', 'منتقد نظام', 'بی‌تفاوت سیاسی', 'طرفدار نظام', 'مستقل'],
+  اجتماعی: ['فردگرا', 'جمع‌گرا', 'خانواده‌محور', 'فعال اجتماعی', 'بی‌تفاوت'],
+  اقتصادی: ['دهک 1–3', 'دهک 4–6', 'دهک 7–10', 'شهرهای بزرگ', 'شهرهای کوچک', 'روستا'],
+  شخصی: ['مرد', 'زن', 'مجرد', 'متأهل', 'تحصیلات کم', 'تحصیلات متوسط', 'تحصیلات عالی'],
+  سفارشی: []
 }
+
+const selectedTags = reactive({})
+for (const key in tagGroups) selectedTags[key] = []
 
 function collectTags() {
-  allSelectedTags.value = Object.values(selectedTags.value).flat()
+  allSelectedTags.value = Object.values(selectedTags).flat()
 }
 
-function getCategoryLabel(key) {
-  const labels = {
-    religion: "گرایش دینی",
-    religiosity: "سبک دینداری",
-    politics: "گرایش سیاسی",
-    social: "ویژگی اجتماعی",
-    economic_class: "طبقه اقتصادی",
-    living_area: "محل زندگی",
-    personal: "ویژگی‌های شخصی",
-    custom_tags: "تگ‌های دلخواه"
-  }
-  return labels[key] || key
-}
+const allSelectedTags = ref([])
 
 async function createAgent() {
   collectTags()
+  bigfive.value?.updateBigFiveScores()
+  gss.value?.generateSummary()
 
   const payload = {
-    ...form.value,
-    age: Number(form.value.age),
-    interests: form.value.interests.split(',').map(i => i.trim()),
-    tags: allSelectedTags.value
+    ...form,
+    age: Number(form.age),
+    interests: form.interests.split(',').map(i => i.trim()),
+    tags: allSelectedTags.value,
+    personality_traits: [
+      ...(bigfive.value?.bigFiveDescriptions || []),
+      ...(gss.value?.gssSummary || [])
+    ]
   }
 
-  const res = await fetch('http://127.0.0.1:8000/agents/create', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
+  try {
+    const res = await fetch("http://127.0.0.1:8000/agents/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
 
-  if (res.ok) {
-    alert('✅ شخصیت با موفقیت ساخته شد!')
-    form.value = { first_name: '', last_name: '', age: '', occupation: '', interests: '' }
-    allSelectedTags.value = []
-  } else {
-    alert('❌ خطا در ثبت شخصیت')
+    if (!res.ok) throw new Error("خطا در ایجاد ایجنت")
+    alert("✅ ایجنت با موفقیت ثبت شد")
+  } catch (err) {
+    alert("❌ خطا در ثبت شخصیت")
+    console.error(err)
   }
 }
 </script>
+
+<style>
+.input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  width: 100%;
+}
+</style>

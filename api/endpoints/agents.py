@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import os, uuid, json, shutil
 from genagents.genagents import GenerativeAgent
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 
 router = APIRouter()
@@ -17,6 +17,9 @@ class AgentCreateRequest(BaseModel):
     occupation: str
     interests: list[str]
     tags: Optional[List[str]] = []
+    personality_traits: Optional[List[str]] = []
+    gss_summary: Optional[List[str]] = []
+
 
 class AgentUpdateRequest(BaseModel):
     age: int | None = None
