@@ -36,6 +36,7 @@
 
     <BigFive ref="bigfive" />
     <GSS ref="gss" />
+    <Behavioral ref="behavioral" />
 
     <button @click="createAgent" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">📨 ثبت شخصیت</button>
   </main>
@@ -45,9 +46,11 @@
 import { ref, reactive } from 'vue'
 import BigFive from './components/BigFive.vue'
 import GSS from './components/GSS.vue'
+import Behavioral from './components/Behavioral.vue'
 
 const bigfive = ref(null)
 const gss = ref(null)
+const behavioral = ref(null)
 
 const form = reactive({
   first_name: '',
@@ -79,6 +82,7 @@ async function createAgent() {
   collectTags()
   bigfive.value?.updateBigFiveScores()
   gss.value?.generateSummary()
+  behavioral.value?.generateSummary()
 
   const payload = {
     ...form,
@@ -87,8 +91,11 @@ async function createAgent() {
     tags: allSelectedTags.value,
     personality_traits: [
       ...(bigfive.value?.bigFiveDescriptions || []),
-      ...(gss.value?.gssSummary || [])
-    ]
+      ...(gss.value?.gssSummary || []),
+      ...(behavioral.value?.behavioralSummary || [])
+    ],
+    gss_summary: gss.value?.gssSummary || [],
+    behavioral_summary: behavioral.value?.behavioralSummary || []
   }
 
   try {

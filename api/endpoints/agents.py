@@ -19,6 +19,7 @@ class AgentCreateRequest(BaseModel):
     tags: Optional[List[str]] = []
     personality_traits: Optional[List[str]] = []
     gss_summary: Optional[List[str]] = []
+    behavioral_summary: Optional[List[str]] = []
 
 
 class AgentUpdateRequest(BaseModel):
@@ -201,3 +202,4 @@ def survey_agent(agent_id: str, request: SurveyRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"خطا در نظرسنجی: {str(e)}")
+
