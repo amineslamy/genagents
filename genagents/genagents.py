@@ -79,8 +79,8 @@ class GenerativeAgent:
                 json_file, indent=2)
 
     # Saving the agent's scratch memories. 
-    with open(f"{storage}/scratch.json", "w") as json_file:
-      json.dump(self.scratch, json_file, indent=2)
+    with open(f"{storage}/scratch.json", "w", encoding="utf-8") as json_file:
+      json.dump(self.scratch, json_file, indent=2, ensure_ascii=False)
 
     # Saving the agent's meta information. 
     with open(f"{storage}/meta.json", "w") as json_file:
@@ -133,6 +133,6 @@ class GenerativeAgent:
 
   def utterance(self, curr_dialogue, context=""): 
     ret = utterance(self, curr_dialogue, context)
-    return ret 
+    return ret
 
 
