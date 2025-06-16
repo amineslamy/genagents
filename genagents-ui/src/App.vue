@@ -43,16 +43,17 @@ async function createAgent() {
   gss.value?.generateSummary()
   behavioral.value?.generateSummary()
 
+  // فقط bigFiveDescriptions را در personality_traits ذخیره کن و جملات کاربر را وارد این کلید نکن
+  const personalityTraits = [
+    ...(bigfive.value?.bigFiveDescriptions || [])
+  ];
+
   const payload = {
     ...form,
     age: Number(form.age),
     interests: form.interests.split(',').map(i => i.trim()),
     tags: form.tags,
-    personality_traits: [
-      ...(bigfive.value?.bigFiveDescriptions || []),
-      ...(gss.value?.gssSummary || []),
-      ...(behavioral.value?.behavioralSummary || [])
-    ],
+    personality_traits: personalityTraits,
     gss_summary: gss.value?.gssSummary || [],
     behavioral_summary: behavioral.value?.behavioralSummary || [],
     character_sentences: form.character_sentences

@@ -59,7 +59,12 @@ def list_agents():
 @router.post("/create")
 def create_agent(agent_data: AgentCreateRequest):
     agent = GenerativeAgent()
-    agent.update_scratch(agent_data.dict())
+    data = agent_data.dict()
+    # اگر character_sentences وجود داشت، آن را به لیست تبدیل کن
+    if data.get("character_sentences"):
+        lines = [s.strip() for s in data["character_sentences"].split("\n") if s.strip()]
+        data["character_sentences"] = lines
+    agent.update_scratch(data)
 
     agent_id = f"{agent_data.first_name.lower()}_{agent_data.last_name.lower()}_{uuid.uuid4().hex[:6]}"
     folder_path = os.path.join(AGENTS_DIR, agent_id)
