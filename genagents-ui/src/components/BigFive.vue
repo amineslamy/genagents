@@ -16,21 +16,12 @@ onMounted(async () => {
 })
 
 function updateBigFiveScores() {
-  // بررسی اینکه همه سوالات پر شده باشه
-  for (const scores of Object.values(bigFiveAnswers.value)) {
-    if (scores.includes(undefined) || scores.includes("") || scores.length < 2) {
-      alert("لطفاً به همه سوالات پاسخ دهید.")
-      return
-    }
-  }
-
   bigFiveDescriptions.value = []
-
   for (const dimension in bigFiveAnswers.value) {
-    const scores = bigFiveAnswers.value[dimension]
+    const scores = bigFiveAnswers.value[dimension].filter(v => v && v !== '')
+    if (scores.length === 0) continue
     const avg = scores.reduce((a, b) => a + b, 0) / scores.length
     bigFiveScores.value[dimension] = Math.round(avg)
-
     let description = ''
     if (avg >= 4.5) description = `او در ویژگی «${bigFiveData.value[dimension].title}» بسیار بالا است.`
     else if (avg >= 3.5) description = `او در ویژگی «${bigFiveData.value[dimension].title}» نسبتاً بالا است.`
@@ -57,10 +48,12 @@ defineExpose({
       <h3 class="font-semibold mb-2">{{ item.title }}</h3>
       <div v-for="(question, idx) in item.questions" :key="idx" class="mb-2">
         <label>{{ question }}</label><br />
-        <select v-model="bigFiveAnswers[key][idx]">
-          <option disabled value="">لطفاً انتخاب کنید</option>
-          <option v-for="i in 5" :key="i" :value="i">{{ i }}</option>
-        </select>
+        <div class="flex gap-4 mt-1">
+          <label v-for="i in 5" :key="i" class="inline-flex items-center">
+            <input type="radio" :name="`${key}-${idx}`" :value="i" v-model="bigFiveAnswers[key][idx]" />
+            <span class="ml-1">{{ i }}</span>
+          </label>
+        </div>
       </div>
     </div>
 

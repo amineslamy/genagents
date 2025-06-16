@@ -2,41 +2,16 @@
   <main dir="rtl" class="p-4" style="font-family: Vazirmatn, Tahoma">
     <h2 class="text-xl font-bold mb-4">ساخت شخصیت جدید</h2>
 
-    <div class="mb-4">
-      <label>نام:</label>
-      <input v-model="form.first_name" class="input" type="text" />
-    </div>
-    <div class="mb-4">
-      <label>نام خانوادگی:</label>
-      <input v-model="form.last_name" class="input" type="text" />
-    </div>
-    <div class="mb-4">
-      <label>سن:</label>
-      <input v-model="form.age" class="input" type="number" />
-    </div>
-    <div class="mb-4">
-      <label>شغل:</label>
-      <input v-model="form.occupation" class="input" type="text" />
-    </div>
-    <div class="mb-4">
-      <label>علاقه‌مندی‌ها (با ویرگول جدا کنید):</label>
-      <input v-model="form.interests" class="input" type="text" />
-    </div>
-
-    <h3 class="font-bold mt-6 mb-2">🏷️ تگ‌های شخصیت</h3>
-    <div v-for="(group, groupName) in tagGroups" :key="groupName" class="mb-4">
-      <label class="font-semibold">{{ groupName }}:</label>
-      <div class="flex flex-wrap gap-2 mt-1">
-        <label v-for="tag in group" :key="tag">
-          <input type="checkbox" :value="tag" v-model="selectedTags[groupName]" />
-          {{ tag }}
-        </label>
-      </div>
-    </div>
+    <PersonalInfo :form="form" />
 
     <BigFive ref="bigfive" />
     <GSS ref="gss" />
     <Behavioral ref="behavioral" />
+
+    <div class="mb-4 mt-6">
+      <label class="font-bold block mb-2">جملات کوتاه درباره شخصیت (هر جمله در یک خط):</label>
+      <textarea v-model="form.character_sentences" rows="5" class="input" placeholder="مثال: فردی اجتماعی است&#10;به مطالعه علاقه دارد&#10;..." />
+    </div>
 
     <button @click="createAgent" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">📨 ثبت شخصیت</button>
   </main>
@@ -47,6 +22,7 @@ import { ref, reactive } from 'vue'
 import BigFive from './components/BigFive.vue'
 import GSS from './components/GSS.vue'
 import Behavioral from './components/Behavioral.vue'
+import PersonalInfo from './components/PersonalInfo.vue'
 
 const bigfive = ref(null)
 const gss = ref(null)
@@ -57,29 +33,12 @@ const form = reactive({
   last_name: '',
   age: '',
   occupation: '',
-  interests: ''
+  interests: '',
+  tags: [],
+  character_sentences: ''
 })
 
-const tagGroups = {
-  مذهبی: ['شیعه', 'سنی', 'بی‌تفاوت مذهبی', 'پایبند به مناسک', 'مذهبی انعطاف‌پذیر', 'رادیکال', 'ضد دین'],
-  سیاسی: ['اصولگرا', 'اصلاح‌طلب', 'انقلابی', 'منتقد نظام', 'بی‌تفاوت سیاسی', 'طرفدار نظام', 'مستقل'],
-  اجتماعی: ['فردگرا', 'جمع‌گرا', 'خانواده‌محور', 'فعال اجتماعی', 'بی‌تفاوت'],
-  اقتصادی: ['دهک 1–3', 'دهک 4–6', 'دهک 7–10', 'شهرهای بزرگ', 'شهرهای کوچک', 'روستا'],
-  شخصی: ['مرد', 'زن', 'مجرد', 'متأهل', 'تحصیلات کم', 'تحصیلات متوسط', 'تحصیلات عالی'],
-  سفارشی: []
-}
-
-const selectedTags = reactive({})
-for (const key in tagGroups) selectedTags[key] = []
-
-function collectTags() {
-  allSelectedTags.value = Object.values(selectedTags).flat()
-}
-
-const allSelectedTags = ref([])
-
 async function createAgent() {
-  collectTags()
   bigfive.value?.updateBigFiveScores()
   gss.value?.generateSummary()
   behavioral.value?.generateSummary()
@@ -88,14 +47,15 @@ async function createAgent() {
     ...form,
     age: Number(form.age),
     interests: form.interests.split(',').map(i => i.trim()),
-    tags: allSelectedTags.value,
+    tags: form.tags,
     personality_traits: [
       ...(bigfive.value?.bigFiveDescriptions || []),
       ...(gss.value?.gssSummary || []),
       ...(behavioral.value?.behavioralSummary || [])
     ],
     gss_summary: gss.value?.gssSummary || [],
-    behavioral_summary: behavioral.value?.behavioralSummary || []
+    behavioral_summary: behavioral.value?.behavioralSummary || [],
+    character_sentences: form.character_sentences
   }
 
   try {

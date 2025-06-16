@@ -41,16 +41,11 @@ onMounted(async () => {
 
 function generateSummary() {
   gssSummary.value = []
-
   for (let i = 0; i < gssQuestions.value.length; i++) {
     const score = parseInt(answers.value[i])
     const q = gssQuestions.value[i]
 
-    if (isNaN(score)) {
-      gssSummary.value = []
-      alert('لطفاً به تمام سوالات پاسخ دهید.')
-      return
-    }
+    if (isNaN(score)) continue
 
     let prefix = ''
     if (score === 5) prefix = 'کاملاً موافق است که'

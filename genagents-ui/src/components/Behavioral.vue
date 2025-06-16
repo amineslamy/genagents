@@ -68,24 +68,16 @@ function convertToThirdPerson(sentence) {
 
 function generateSummary() {
   behavioralSummary.value = []
-
   for (let i = 0; i < behavioralQuestions.value.length; i++) {
     const score = parseInt(answers.value[i])
     const q = thirdPersonRewrites.value[i]
-
-    if (isNaN(score)) {
-      behavioralSummary.value = []
-      alert('لطفاً به تمام سوالات اقتصاد رفتاری پاسخ دهید.')
-      return
-    }
-
+    if (isNaN(score)) continue
     let prefix = ''
     if (score === 5) prefix = 'او کاملاً موافق است که'
     else if (score === 4) prefix = 'او موافق است که'
     else if (score === 3) prefix = 'او نسبت به این نظر بی‌تفاوت است که'
     else if (score === 2) prefix = 'او مخالف است که'
     else prefix = 'او کاملاً مخالف است که'
-
     behavioralSummary.value.push(`${prefix} ${q}`)
   }
 }

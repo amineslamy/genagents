@@ -20,6 +20,7 @@ class AgentCreateRequest(BaseModel):
     personality_traits: Optional[List[str]] = []
     gss_summary: Optional[List[str]] = []
     behavioral_summary: Optional[List[str]] = []
+    character_sentences: Optional[str] = None
 
 
 class AgentUpdateRequest(BaseModel):
