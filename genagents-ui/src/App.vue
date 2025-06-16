@@ -1,19 +1,50 @@
 <template>
   <main dir="rtl" class="p-4" style="font-family: Vazirmatn, Tahoma">
     <h2 class="text-xl font-bold mb-4">ساخت شخصیت جدید</h2>
-
-    <PersonalInfo :form="form" />
-
-    <BigFive ref="bigfive" />
-    <GSS ref="gss" />
-    <Behavioral ref="behavioral" />
-
-    <div class="mb-4 mt-6">
-      <label class="font-bold block mb-2">جملات کوتاه درباره شخصیت (هر جمله در یک خط):</label>
-      <textarea v-model="form.character_sentences" rows="5" class="input" placeholder="مثال: فردی اجتماعی است&#10;به مطالعه علاقه دارد&#10;..." />
+    <div class="accordion-form">
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(0)">
+          اطلاعات شخصی
+        </button>
+        <div v-show="activeSection === 0" class="accordion-content">
+          <PersonalInfo :form="form" />
+        </div>
+      </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(1)">
+          🧠 پرسشنامه شخصیت (Big Five)
+        </button>
+        <div v-show="activeSection === 1" class="accordion-content">
+          <BigFive ref="bigfive" />
+        </div>
+      </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(2)">
+          📋 پرسشنامه اجتماعی سیاسی (GSS)
+        </button>
+        <div v-show="activeSection === 2" class="accordion-content">
+          <GSS ref="gss" />
+        </div>
+      </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(3)">
+          💰 پرسشنامه اقتصاد رفتاری
+        </button>
+        <div v-show="activeSection === 3" class="accordion-content">
+          <Behavioral ref="behavioral" />
+        </div>
+      </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(4)">
+          جملات کوتاه درباره شخصیت
+        </button>
+        <div v-show="activeSection === 4" class="accordion-content">
+          <label class="font-bold block mb-2">جملات کوتاه درباره شخصیت (هر جمله در یک خط):</label>
+          <textarea v-model="form.character_sentences" rows="5" class="input" placeholder="مثال: فردی اجتماعی است&#10;به مطالعه علاقه دارد&#10;..." />
+        </div>
+      </div>
+      <button @click="createAgent" class="submit-btn mt-6">📨 ثبت شخصیت</button>
     </div>
-
-    <button @click="createAgent" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">📨 ثبت شخصیت</button>
   </main>
 </template>
 
@@ -37,6 +68,19 @@ const form = reactive({
   tags: [],
   character_sentences: ''
 })
+
+const activeSection = ref(null)
+function toggleSection(idx) {
+  if (activeSection.value === idx) {
+    activeSection.value = null
+  } else {
+    activeSection.value = idx
+    setTimeout(() => {
+      const section = document.querySelectorAll('.accordion-section')[idx]
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
+  }
+}
 
 async function createAgent() {
   bigfive.value?.updateBigFiveScores()
@@ -74,6 +118,8 @@ async function createAgent() {
   }
 }
 </script>
+
+<style src="./style.css"></style>
 
 <style>
 .input {

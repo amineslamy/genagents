@@ -65,6 +65,241 @@ button:focus-visible {
   text-align: center;
 }
 
+/* فرم کلی */
+main, .accordion-form, form {
+  background: #f9f9fb;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0002;
+  padding: 2.5em 2em 2em 2em;
+  margin: 2em auto;
+  max-width: 650px;
+}
+
+h2, h3, h4, label {
+  color: #1a237e;
+  font-family: Vazirmatn, Tahoma, sans-serif;
+}
+
+.input, input, select, textarea {
+  margin-bottom: 1.2em;
+  border-radius: 8px;
+  border: 1.5px solid #bdbdbd;
+  padding: 0.7em 1em;
+  width: 100%;
+  font-size: 1.08em;
+  background: #fff;
+  transition: border 0.2s;
+}
+.input:focus, input:focus, select:focus, textarea:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+  background: #f0f7ff;
+}
+
+button, .submit-btn {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  color: #fff;
+  border: none;
+  padding: 0.9em 2.2em;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #1976d220;
+  margin-top: 1.5em;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+button:hover, .submit-btn:hover {
+  background: linear-gradient(90deg, #1565c0 0%, #64b5f6 100%);
+  box-shadow: 0 4px 16px #1976d240;
+}
+
+.accordion-header {
+  background: #e3eafc;
+  color: #1a237e;
+  border-radius: 8px 8px 0 0;
+  font-size: 1.08em;
+  margin-bottom: 0;
+  border: none;
+  padding: 1em 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.accordion-header:hover {
+  background: #bbdefb;
+}
+.accordion-content {
+  background: #f5faff;
+  border-radius: 0 0 8px 8px;
+  padding: 1.2em 1em 1.5em 1em;
+  margin-bottom: 1.5em;
+}
+
+/* آکاردئون مدرن و چشم‌نواز */
+.accordion-form {
+  max-width: 700px;
+  margin: 2em auto;
+  background: #f9f9fb;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0002;
+  padding: 2.5em 2em 2em 2em;
+}
+.accordion-section {
+  margin-bottom: 1.5em;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px #1976d210;
+  background: #fff;
+}
+.accordion-header {
+  width: 100%;
+  text-align: right;
+  padding: 1.2em 1.5em;
+  background: linear-gradient(90deg, #e3eafc 0%, #f5faff 100%);
+  color: #1a237e;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.13em;
+  border-radius: 10px 10px 0 0;
+  transition: background 0.2s;
+  outline: none;
+  box-shadow: none;
+}
+.accordion-header:hover, .accordion-header:focus {
+  background: linear-gradient(90deg, #bbdefb 0%, #e3eafc 100%);
+}
+.accordion-content {
+  background: #f5faff;
+  border-radius: 0 0 10px 10px;
+  padding: 1.5em 1.2em 1.7em 1.2em;
+  border-top: 1px solid #e3eafc;
+  animation: fadeInAccordion 0.4s;
+}
+@keyframes fadeInAccordion {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* تب افقی (در صورت نیاز) */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #e3eafc;
+  margin-bottom: 2em;
+  background: #f9f9fb;
+  border-radius: 12px 12px 0 0;
+  overflow-x: auto;
+}
+.tab {
+  padding: 1em 2em;
+  cursor: pointer;
+  color: #1976d2;
+  font-weight: bold;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  transition: border 0.2s, background 0.2s;
+  font-size: 1.08em;
+}
+.tab.active, .tab:focus {
+  border-bottom: 3px solid #1976d2;
+  background: #e3eafc;
+  color: #1a237e;
+}
+.tab-content {
+  background: #f5faff;
+  border-radius: 0 0 12px 12px;
+  padding: 2em 1.5em 2em 1.5em;
+  box-shadow: 0 2px 8px #1976d210;
+  margin-bottom: 2em;
+}
+
+/* زیباسازی لیبل‌ها و فاصله‌ها */
+label {
+  font-weight: 500;
+  margin-bottom: 0.4em;
+  display: block;
+}
+
+/* زیباسازی رادیو و چک‌باکس */
+input[type="radio"], input[type="checkbox"] {
+  width: 1.1em;
+  height: 1.1em;
+  accent-color: #1976d2;
+  margin-left: 0.4em;
+  vertical-align: middle;
+}
+
+/* زیباسازی textarea */
+textarea {
+  min-height: 90px;
+  resize: vertical;
+  font-family: Vazirmatn, Tahoma, sans-serif;
+}
+
+/* زیباسازی پیام موفقیت/خطا */
+.swal2-popup, .alert {
+  font-family: Vazirmatn, Tahoma, sans-serif;
+  font-size: 1.1em;
+}
+
+/* سرتیتر گروه تگ‌ها */
+.personalinfo-group-label, .tag-group-label {
+  font-size: 1.08em;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 0.5em;
+  display: block;
+  letter-spacing: 0.5px;
+}
+
+/* گزینه‌های تگ */
+.flex.flex-wrap.gap-2.mt-1 label {
+  font-weight: normal;
+  color: #333;
+  background: #f5faff;
+  border-radius: 6px;
+  padding: 0.2em 0.7em 0.2em 0.7em;
+  margin-bottom: 0.2em;
+  margin-left: 0.2em;
+  transition: background 0.2s;
+}
+.flex.flex-wrap.gap-2.mt-1 label:hover {
+  background: #e3eafc;
+}
+
+/* گزینه‌های پاسخ big five به صورت افقی */
+.bigfive-options {
+  display: flex;
+  flex-direction: row;
+  gap: 1.2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.bigfive-options label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  background: #f5faff;
+  border-radius: 6px;
+  padding: 0.2em 0.7em;
+  margin-bottom: 0;
+  margin-left: 0.2em;
+  transition: background 0.2s;
+}
+.bigfive-options label:hover {
+  background: #e3eafc;
+}
+
+/* ریسپانسیو */
+@media (max-width: 700px) {
+  main, .accordion-form, form {
+    padding: 1em 0.5em;
+    max-width: 98vw;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -76,4 +311,9 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* اسکرول به ابتدای آکاردئون هنگام باز شدن */
+.accordion-header:focus-visible {
+  outline: 2px solid #1976d2;
 }

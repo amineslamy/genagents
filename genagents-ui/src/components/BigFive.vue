@@ -48,8 +48,8 @@ defineExpose({
       <h3 class="font-semibold mb-2">{{ item.title }}</h3>
       <div v-for="(question, idx) in item.questions" :key="idx" class="mb-2">
         <label>{{ question }}</label><br />
-        <div class="flex gap-4 mt-1">
-          <label v-for="i in 5" :key="i" class="inline-flex items-center">
+        <div class="bigfive-options">
+          <label v-for="i in 5" :key="i">
             <input type="radio" :name="`${key}-${idx}`" :value="i" v-model="bigFiveAnswers[key][idx]" />
             <span class="ml-1">{{ i }}</span>
           </label>

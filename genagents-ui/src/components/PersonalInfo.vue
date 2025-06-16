@@ -58,7 +58,7 @@ watch(() => props.form.tags, (val) => {
     /><br/>
 
     <div v-for="(group, groupName) in tagGroups" :key="groupName" class="mb-4">
-      <label class="font-semibold">{{ groupName }}:</label>
+      <span class="personalinfo-group-label">{{ groupName }}:</span>
       <div class="flex flex-wrap gap-2 mt-1">
         <label v-for="tag in group" :key="tag">
           <input type="checkbox" :value="tag" v-model="selectedTags" />
