@@ -71,20 +71,20 @@ class GenerativeAgent:
     
     # Saving the agent's memory stream. This includes saving the embeddings 
     # as well as the nodes. 
-    with open(f"{storage}/memory_stream/embeddings.json", "w") as json_file:
+    with open(f"{storage}/memory_stream/embeddings.json", "w", encoding="utf-8") as json_file:
       json.dump(self.memory_stream.embeddings, 
-                json_file)
-    with open(f"{storage}/memory_stream/nodes.json", "w") as json_file:
+                json_file, ensure_ascii=False)
+    with open(f"{storage}/memory_stream/nodes.json", "w", encoding="utf-8") as json_file:
       json.dump([node.package() for node in self.memory_stream.seq_nodes], 
-                json_file, indent=2)
+                json_file, indent=2, ensure_ascii=False)
 
     # Saving the agent's scratch memories. 
     with open(f"{storage}/scratch.json", "w", encoding="utf-8") as json_file:
       json.dump(self.scratch, json_file, indent=2, ensure_ascii=False)
 
     # Saving the agent's meta information. 
-    with open(f"{storage}/meta.json", "w") as json_file:
-      json.dump(self.package(), json_file, indent=2)
+    with open(f"{storage}/meta.json", "w", encoding="utf-8") as json_file:
+      json.dump(self.package(), json_file, indent=2, ensure_ascii=False)
 
 
   def get_fullname(self): 
