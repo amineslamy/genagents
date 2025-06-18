@@ -43,8 +43,18 @@
           <textarea v-model="form.character_sentences" rows="5" class="input" placeholder="مثال: فردی اجتماعی است&#10;به مطالعه علاقه دارد&#10;..." />
         </div>
       </div>
-      <button @click="createAgent" class="submit-btn mt-6">📨 ثبت شخصیت</button>
+      <button @click="createAgent" :disabled="isLoading" class="submit-btn mt-6" style="min-width: 160px;">
+        <span v-if="isLoading">⏳ در حال ثبت شخصیت...</span>
+        <span v-else>📨 ثبت شخصیت</span>
+      </button>
       <button v-if="agentId" @click="reflectAgent" class="submit-btn mt-3 bg-green-600">🧠 بازتاب فکری</button>
+      <button v-if="successMessage" @click="refreshForm" class="submit-btn mt-3 bg-gray-500">🔄 تازه‌سازی پرسشنامه</button>
+      <div v-if="isLoading" class="loading-box mt-4">
+        <span class="spinner"></span>
+        <span>در حال پردازش، لطفاً صبر کنید...</span>
+      </div>
+      <div v-if="errorMessage" class="error-box mt-4">{{ errorMessage }}</div>
+      <div v-if="successMessage" class="success-box mt-4">{{ successMessage }}</div>
     </div>
   </main>
 </template>
@@ -72,6 +82,10 @@ const form = reactive({
 
 const activeSection = ref(null)
 const agentId = ref(null)
+const isLoading = ref(false)
+const errorMessage = ref('')
+const successMessage = ref('')
+
 function toggleSection(idx) {
   if (activeSection.value === idx) {
     activeSection.value = null
@@ -85,6 +99,9 @@ function toggleSection(idx) {
 }
 
 async function createAgent() {
+  isLoading.value = true
+  errorMessage.value = ''
+  successMessage.value = ''
   bigfive.value?.updateBigFiveScores()
   gss.value?.generateSummary()
   behavioral.value?.generateSummary()
@@ -112,7 +129,7 @@ async function createAgent() {
     })
     const data = await res.json()
     if (!res.ok) throw new Error("خطا در ایجاد ایجنت")
-    alert("✅ ایجنت با موفقیت ثبت شد")
+    successMessage.value = "✅ ایجنت با موفقیت ثبت شد"
     agentId.value = data.agent_id
     form.first_name = ''
     form.last_name = ''
@@ -126,8 +143,10 @@ async function createAgent() {
     gss.value?.$forceUpdate?.()
     behavioral.value?.$forceUpdate?.()
   } catch (err) {
-    alert("❌ خطا در ثبت شخصیت")
+    errorMessage.value = '❌ خطا در ثبت شخصیت'
     console.error(err)
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -139,15 +158,14 @@ async function reflectAgent() {
   const data = await res.json()
   alert(data.message)
 }
+
+function refreshForm() {
+  window.location.reload();
+}
 </script>
 
 <style src="./style.css"></style>
 
 <style>
-.input {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 0.3rem 0.6rem;
-  width: 100%;
-}
+/* استایل‌های اختصاصی این فایل را اینجا قرار دهید */
 </style>
