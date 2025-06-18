@@ -60,9 +60,7 @@ def list_agents():
 def create_agent(agent_data: AgentCreateRequest):
     try:
         agent = GenerativeAgent()
-        # اطلاعات فرم را به صورت دیکشنری به update_scratch بده
         data = agent_data.dict()
-        print(f"[DEBUG] agent_data: {data}")
         agent.update_scratch(data)
 
         agent_id = f"{agent_data.first_name.lower()}_{agent_data.last_name.lower()}_{uuid.uuid4().hex[:6]}"
@@ -71,11 +69,31 @@ def create_agent(agent_data: AgentCreateRequest):
 
         agent.save(folder_path)
 
-        # افزودن یک observation اولیه (مثلاً نام و شغل)
-        initial_obs = f"{data['first_name']} {data['last_name']}، شغل: {data['occupation']}"
-        agent.remember(initial_obs)
+        # افزودن یک observation اولیه (نام، نام خانوادگی، سن، شغل، علایق)
+        personal_info_obs = f"نام: {data['first_name']}، نام خانوادگی: {data['last_name']}، سن: {data['age']}، شغل: {data['occupation']}، علایق: {', '.join(data['interests'])}"
+        agent.remember(personal_info_obs)
 
-        # اجرای بازتاب فکری برای ساخت nodes و embeddings
+        # برچسب‌ها در یک observation جداگانه
+        if data.get('tags'):
+            tags_obs = f"برچسب‌ها: {', '.join(data['tags'])}"
+            agent.remember(tags_obs)
+
+        # هر پاسخ کاربر به صورت observation جداگانه ذخیره شود
+        for trait in data.get("personality_traits", []):
+            agent.remember(trait)
+        for gss in data.get("gss_summary", []):
+            agent.remember(gss)
+        for beh in data.get("behavioral_summary", []):
+            agent.remember(beh)
+        # اگر character_sentences لیست است
+        char_sents = data.get("character_sentences", [])
+        if isinstance(char_sents, list):
+            for sent in char_sents:
+                agent.remember(sent)
+        elif isinstance(char_sents, str):
+            agent.remember(char_sents)
+
+        # اجرای بازتاب فکری کلی (اختیاری)
         anchor = json.dumps(agent.scratch, ensure_ascii=False)
         agent.reflect(anchor)
         agent.save(folder_path)
