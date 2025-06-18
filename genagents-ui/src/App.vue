@@ -44,6 +44,7 @@
         </div>
       </div>
       <button @click="createAgent" class="submit-btn mt-6">📨 ثبت شخصیت</button>
+      <button v-if="agentId" @click="reflectAgent" class="submit-btn mt-3 bg-green-600">🧠 بازتاب فکری</button>
     </div>
   </main>
 </template>
@@ -70,6 +71,7 @@ const form = reactive({
 })
 
 const activeSection = ref(null)
+const agentId = ref(null)
 function toggleSection(idx) {
   if (activeSection.value === idx) {
     activeSection.value = null
@@ -87,7 +89,6 @@ async function createAgent() {
   gss.value?.generateSummary()
   behavioral.value?.generateSummary()
 
-  // فقط bigFiveDescriptions را در personality_traits ذخیره کن و جملات کاربر را وارد این کلید نکن
   const personalityTraits = [
     ...(bigfive.value?.bigFiveDescriptions || [])
   ];
@@ -109,13 +110,34 @@ async function createAgent() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     })
-
+    const data = await res.json()
     if (!res.ok) throw new Error("خطا در ایجاد ایجنت")
     alert("✅ ایجنت با موفقیت ثبت شد")
+    agentId.value = data.agent_id
+    form.first_name = ''
+    form.last_name = ''
+    form.age = ''
+    form.occupation = ''
+    form.interests = ''
+    form.tags = []
+    form.character_sentences = ''
+    activeSection.value = null
+    bigfive.value?.$forceUpdate?.()
+    gss.value?.$forceUpdate?.()
+    behavioral.value?.$forceUpdate?.()
   } catch (err) {
     alert("❌ خطا در ثبت شخصیت")
     console.error(err)
   }
+}
+
+async function reflectAgent() {
+  if (!agentId.value) return
+  const res = await fetch(`http://127.0.0.1:8000/agents/${agentId.value}/reflect`, {
+    method: "POST"
+  })
+  const data = await res.json()
+  alert(data.message)
 }
 </script>
 

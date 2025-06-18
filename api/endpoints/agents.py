@@ -58,25 +58,38 @@ def list_agents():
 
 @router.post("/create")
 def create_agent(agent_data: AgentCreateRequest):
-    agent = GenerativeAgent()
-    data = agent_data.dict()
-    # اگر character_sentences وجود داشت، آن را به لیست تبدیل کن
-    if data.get("character_sentences"):
-        lines = [s.strip() for s in data["character_sentences"].split("\n") if s.strip()]
-        data["character_sentences"] = lines
-    agent.update_scratch(data)
+    try:
+        agent = GenerativeAgent()
+        # اطلاعات فرم را به صورت دیکشنری به update_scratch بده
+        data = agent_data.dict()
+        print(f"[DEBUG] agent_data: {data}")
+        agent.update_scratch(data)
 
-    agent_id = f"{agent_data.first_name.lower()}_{agent_data.last_name.lower()}_{uuid.uuid4().hex[:6]}"
-    folder_path = os.path.join(AGENTS_DIR, agent_id)
-    os.makedirs(folder_path, exist_ok=True)
+        agent_id = f"{agent_data.first_name.lower()}_{agent_data.last_name.lower()}_{uuid.uuid4().hex[:6]}"
+        folder_path = os.path.join(AGENTS_DIR, agent_id)
+        os.makedirs(folder_path, exist_ok=True)
 
-    agent.save(folder_path)
+        agent.save(folder_path)
 
-    return {
-        "status": "success",
-        "agent_id": agent_id,
-        "message": f"شخصیت '{agent.get_fullname()}' با موفقیت ساخته شد."
-    }
+        # افزودن یک observation اولیه (مثلاً نام و شغل)
+        initial_obs = f"{data['first_name']} {data['last_name']}، شغل: {data['occupation']}"
+        agent.remember(initial_obs)
+
+        # اجرای بازتاب فکری برای ساخت nodes و embeddings
+        anchor = json.dumps(agent.scratch, ensure_ascii=False)
+        agent.reflect(anchor)
+        agent.save(folder_path)
+
+        return {
+            "status": "success",
+            "agent_id": agent_id,
+            "message": f"شخصیت '{agent.get_fullname()}' با موفقیت ساخته شد و بازتاب فکری انجام شد."
+        }
+    except Exception as e:
+        print(f"[ERROR] خطا در ثبت شخصیت: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"خطا در ثبت شخصیت: {str(e)}")
 
 # ---------- دریافت اطلاعات یک ایجنت ----------
 
@@ -149,7 +162,9 @@ def reflect_agent(agent_id: str):
 
     try:
         agent = GenerativeAgent.load(folder)
-        reflection = agent.reflect()
+        # استفاده از کل محتوای scratch به عنوان anchor
+        anchor = json.dumps(agent.scratch, ensure_ascii=False)
+        reflection = agent.reflect(anchor)
         agent.save(folder)
 
         return {
