@@ -24,6 +24,11 @@
       <div>شغل: {{ selectedAgent.occupation }}</div>
       <div>علاقه‌مندی‌ها: {{ selectedAgent.interests?.join(', ') }}</div>
       <div>ID: {{ selectedAgent.id }}</div>
+      <div v-if="selectedAgent.tags && selectedAgent.tags.length">تگ‌ها: {{ selectedAgent.tags.join(', ') }}</div>
+      <div v-if="selectedAgent.personality_traits && selectedAgent.personality_traits.length">ویژگی‌های شخصیتی: {{ selectedAgent.personality_traits.join(', ') }}</div>
+      <div v-if="selectedAgent.gss_summary && selectedAgent.gss_summary.length">خلاصه GSS: {{ selectedAgent.gss_summary.join(', ') }}</div>
+      <div v-if="selectedAgent.behavioral_summary && selectedAgent.behavioral_summary.length">خلاصه اقتصاد رفتاری: {{ selectedAgent.behavioral_summary.join(', ') }}</div>
+      <div v-if="selectedAgent.character_sentences && selectedAgent.character_sentences.length">جملات شخصیت: {{ selectedAgent.character_sentences.join(', ') }}</div>
       <button @click="selectedAgent = null" class="submit-btn mt-2">بستن</button>
     </div>
   </main>
@@ -58,23 +63,8 @@ async function fetchAgents() {
     const res = await fetch('/agents/')
     if (!res.ok) throw new Error('خطا در دریافت لیست شخصیت‌ها')
     const data = await res.json()
+    agents.value = data
     console.log('API agents data:', data)
-    // تبدیل داده‌ها به ساختار مورد انتظار
-    agents.value = data.map(agent => {
-      let first_name = '', last_name = ''
-      if (agent.full_name) {
-        const parts = agent.full_name.split(' ')
-        first_name = parts[0] || ''
-        last_name = parts.slice(1).join(' ') || ''
-      }
-      return {
-        ...agent,
-        first_name,
-        last_name,
-        tags: agent.tags || []
-      }
-    })
-    console.log('Parsed agents:', agents.value)
   } catch (err) {
     errorMessage.value = '❌ خطا در دریافت لیست شخصیت‌ها'
   } finally {

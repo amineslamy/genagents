@@ -34,10 +34,15 @@ class AgentInfo(BaseModel):
     age: int
     occupation: str
     interests: list[str]
+    tags: Optional[List[str]] = []
+    personality_traits: Optional[List[str]] = []
+    gss_summary: Optional[List[str]] = []
+    behavioral_summary: Optional[List[str]] = []
+    character_sentences: Optional[List[str]] = []
 
 # ---------- لیست ایجنت‌ها ----------
 
-@router.get("/", response_model=list[AgentInfo])
+@router.get("/")
 def list_agents():
     agents = []
     for folder in os.listdir(AGENTS_DIR):
@@ -50,7 +55,12 @@ def list_agents():
                     "full_name": f"{data.get('first_name')} {data.get('last_name')}",
                     "age": data.get("age"),
                     "occupation": data.get("occupation"),
-                    "interests": data.get("interests", [])
+                    "interests": data.get("interests", []),
+                    "tags": data.get("tags", []),
+                    "personality_traits": data.get("personality_traits", []),
+                    "gss_summary": data.get("gss_summary", []),
+                    "behavioral_summary": data.get("behavioral_summary", []),
+                    "character_sentences": data.get("character_sentences", []),
                 })
     return agents
 
@@ -111,7 +121,7 @@ def create_agent(agent_data: AgentCreateRequest):
 
 # ---------- دریافت اطلاعات یک ایجنت ----------
 
-@router.get("/{agent_id}", response_model=AgentInfo)
+@router.get("/{agent_id}")
 def get_agent(agent_id: str):
     folder = os.path.join(AGENTS_DIR, agent_id)
     scratch_path = os.path.join(folder, "scratch.json")
@@ -126,7 +136,12 @@ def get_agent(agent_id: str):
         "full_name": f"{data.get('first_name')} {data.get('last_name')}",
         "age": data.get("age"),
         "occupation": data.get("occupation"),
-        "interests": data.get("interests", [])
+        "interests": data.get("interests", []),
+        "tags": data.get("tags", []),
+        "personality_traits": data.get("personality_traits", []),
+        "gss_summary": data.get("gss_summary", []),
+        "behavioral_summary": data.get("behavioral_summary", []),
+        "character_sentences": data.get("character_sentences", []),
     }
 
 # ---------- به‌روزرسانی اطلاعات ایجنت ----------
