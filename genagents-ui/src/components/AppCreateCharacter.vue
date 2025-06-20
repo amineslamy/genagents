@@ -1,54 +1,86 @@
 <template>
   <main dir="rtl" class="p-4" style="font-family: Vazirmatn, Tahoma">
     <h2 class="text-xl font-bold mb-4">ساخت شخصیت جدید</h2>
-
-    <div class="mb-4">
-      <label>نام:</label>
-      <input v-model="form.first_name" class="input" type="text" />
-    </div>
-    <div class="mb-4">
-      <label>نام خانوادگی:</label>
-      <input v-model="form.last_name" class="input" type="text" />
-    </div>
-    <div class="mb-4">
-      <label>سن:</label>
-      <input v-model="form.age" class="input" type="number" />
-    </div>
-    <div class="mb-4">
-      <label>شغل:</label>
-      <input v-model="form.occupation" class="input" type="text" />
-    </div>
-    <div class="mb-4">
-      <label>علاقه‌مندی‌ها (با ویرگول جدا کنید):</label>
-      <input v-model="form.interests" class="input" type="text" />
-    </div>
-
-    <h3 class="font-bold mt-6 mb-2">🏷️ تگ‌های شخصیت</h3>
-    <div v-for="(group, groupName) in tagGroups" :key="groupName" class="mb-4">
-      <label class="font-semibold">{{ groupName }}:</label>
-      <div class="flex flex-wrap gap-2 mt-1">
-        <label v-for="tag in group" :key="tag">
-          <input type="checkbox" :value="tag" v-model="selectedTags[groupName]" />
-          {{ tag }}
-        </label>
+    <div class="accordion-form">
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(0)">
+          اطلاعات شخصی
+        </button>
+        <div v-show="activeSection === 0" class="accordion-content">
+          <div class="mb-4">
+            <label>نام:</label>
+            <input v-model="form.first_name" class="input" type="text" />
+          </div>
+          <div class="mb-4">
+            <label>نام خانوادگی:</label>
+            <input v-model="form.last_name" class="input" type="text" />
+          </div>
+          <div class="mb-4">
+            <label>سن:</label>
+            <input v-model="form.age" class="input" type="number" />
+          </div>
+          <div class="mb-4">
+            <label>شغل:</label>
+            <input v-model="form.occupation" class="input" type="text" />
+          </div>
+          <div class="mb-4">
+            <label>علاقه‌مندی‌ها (با ویرگول جدا کنید):</label>
+            <input v-model="form.interests" class="input" type="text" />
+          </div>
+        </div>
       </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(1)">
+          🏷️ تگ‌های شخصیت
+        </button>
+        <div v-show="activeSection === 1" class="accordion-content">
+          <div v-for="(group, groupName) in tagGroups" :key="groupName" class="mb-4">
+            <label class="font-semibold">{{ groupName }}:</label>
+            <div class="flex flex-wrap gap-2 mt-1">
+              <label v-for="tag in group" :key="tag">
+                <input type="checkbox" :value="tag" v-model="selectedTags[groupName]" />
+                {{ tag }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(2)">
+          🧠 پرسشنامه شخصیت (Big Five)
+        </button>
+        <div v-show="activeSection === 2" class="accordion-content">
+          <BigFive ref="bigfive" />
+        </div>
+      </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(3)">
+          📋 پرسشنامه اجتماعی سیاسی (GSS)
+        </button>
+        <div v-show="activeSection === 3" class="accordion-content">
+          <GSS ref="gss" />
+        </div>
+      </div>
+      <div class="accordion-section">
+        <button class="accordion-header" @click="toggleSection(4)">
+          💰 پرسشنامه اقتصاد رفتاری
+        </button>
+        <div v-show="activeSection === 4" class="accordion-content">
+          <Behavioral ref="behavioral" />
+        </div>
+      </div>
+      <button @click="createAgent" :disabled="isLoading" class="submit-btn mt-6" style="min-width: 160px;">
+        <span v-if="isLoading" class="spinner"></span>
+        <span v-if="!isLoading">📨 ثبت شخصیت</span>
+        <span v-else>در حال ثبت...</span>
+      </button>
+      <div v-if="isLoading" class="loading-box mt-4">
+        <span class="spinner"></span>
+        <span>در حال پردازش، لطفاً صبر کنید...</span>
+      </div>
+      <div v-if="errorMessage" class="error-box mt-4">{{ errorMessage }}</div>
+      <div v-if="successMessage" class="success-box mt-4">{{ successMessage }}</div>
     </div>
-
-    <BigFive ref="bigfive" />
-    <GSS ref="gss" />
-    <Behavioral ref="behavioral" />
-
-    <button @click="createAgent" :disabled="isLoading" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">
-      <span v-if="isLoading" class="spinner"></span>
-      <span v-if="!isLoading">📨 ثبت شخصیت</span>
-      <span v-else>در حال ثبت...</span>
-    </button>
-    <div v-if="isLoading" class="loading-box mt-4">
-      <span class="spinner"></span>
-      <span>در حال پردازش، لطفاً صبر کنید...</span>
-    </div>
-    <div v-if="errorMessage" class="error-box mt-4">{{ errorMessage }}</div>
-    <div v-if="successMessage" class="success-box mt-4">{{ successMessage }}</div>
   </main>
 </template>
 
@@ -90,6 +122,19 @@ const allSelectedTags = ref([])
 const isLoading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+const activeSection = ref(0)
+
+function toggleSection(idx) {
+  if (activeSection.value === idx) {
+    activeSection.value = null
+  } else {
+    activeSection.value = idx
+    setTimeout(() => {
+      const section = document.querySelectorAll('.accordion-section')[idx]
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
+  }
+}
 
 async function createAgent() {
   collectTags()
@@ -129,50 +174,7 @@ async function createAgent() {
 }
 </script>
 
+<!-- حذف استایل‌های عمومی و انتقال به style.css -->
 <style>
-.input {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 0.3rem 0.6rem;
-  width: 100%;
-}
-.spinner {
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #42b983;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  margin-left: 8px;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-.loading-box {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #f3f3f3;
-  border-radius: 6px;
-  padding: 0.7rem 1.2rem;
-  margin-top: 1rem;
-}
-.success-box {
-  background: #e6ffed;
-  color: #1a7f37;
-  border: 1px solid #42b983;
-  border-radius: 6px;
-  padding: 0.7rem 1.2rem;
-  margin-top: 1rem;
-}
-.error-box {
-  background: #ffeaea;
-  color: #b71c1c;
-  border: 1px solid #e57373;
-  border-radius: 6px;
-  padding: 0.7rem 1.2rem;
-  margin-top: 1rem;
-}
+/* اگر استایل خاصی فقط برای این کامپوننت نیاز است، اینجا قرار گیرد */
 </style>
