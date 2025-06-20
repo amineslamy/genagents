@@ -9,17 +9,21 @@
     <div v-if="errorMessage" class="error-box mt-4">{{ errorMessage }}</div>
     <ul v-if="filteredAgents.length" class="agent-list">
       <li v-for="agent in filteredAgents" :key="agent.id" @click="selectAgent(agent)" class="agent-item">
-        <span>{{ agent.first_name }} {{ agent.last_name }}</span>
-        <span class="agent-tags">{{ agent.tags?.join(', ') }}</span>
+        <span>نام کامل: {{ agent.full_name }}</span>
+        <span>سن: {{ agent.age }}</span>
+        <span>شغل: {{ agent.occupation }}</span>
+        <span>علاقه‌مندی‌ها: {{ agent.interests?.join(', ') }}</span>
+        <span class="agent-id">ID: {{ agent.id }}</span>
       </li>
     </ul>
     <div v-else-if="!isLoading && !errorMessage" class="mt-4">هیچ شخصیتی یافت نشد.</div>
     <div v-if="selectedAgent" class="selected-agent-box mt-6">
       <h3>شخصیت انتخاب‌شده:</h3>
-      <div>نام: {{ selectedAgent.first_name }} {{ selectedAgent.last_name }}</div>
+      <div>نام کامل: {{ selectedAgent.full_name }}</div>
       <div>سن: {{ selectedAgent.age }}</div>
       <div>شغل: {{ selectedAgent.occupation }}</div>
-      <div>تگ‌ها: {{ selectedAgent.tags?.join(', ') }}</div>
+      <div>علاقه‌مندی‌ها: {{ selectedAgent.interests?.join(', ') }}</div>
+      <div>ID: {{ selectedAgent.id }}</div>
       <button @click="selectedAgent = null" class="submit-btn mt-2">بستن</button>
     </div>
   </main>
@@ -88,8 +92,9 @@ onMounted(fetchAgents)
 }
 .agent-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2em;
   padding: 0.8em 1.2em;
   margin-bottom: 0.5em;
   background: #fafdff;
@@ -100,7 +105,7 @@ onMounted(fetchAgents)
 .agent-item:hover {
   background: #e3eafc;
 }
-.agent-tags {
+.agent-id {
   color: #1976d2;
   font-size: 0.95em;
 }
