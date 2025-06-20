@@ -1,0 +1,82 @@
+[
+  {
+    "node_id": 0,
+    "node_type": "observation",
+    "content": "نام: نام، نام خانوادگی: مستعار، سن: 50، شغل: تحلیلگر، علایق: بورس",
+    "importance": 60,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 1,
+    "node_type": "observation",
+    "content": "برچسب‌ها: سنی",
+    "importance": 30,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 2,
+    "node_type": "observation",
+    "content": "او در ویژگی «وظیفه‌شناسی» در حد متوسط قرار دارد.",
+    "importance": 65,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 3,
+    "node_type": "observation",
+    "content": "او موافق است که مردم باید حق اعتراض به حکومت داشته باشند.",
+    "importance": 85,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 4,
+    "node_type": "observation",
+    "content": "او نسبت به این نظر بی‌تفاوت است که به طور منظم پس‌انداز می‌کند.",
+    "importance": 70,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 5,
+    "node_type": "observation",
+    "content": "او موافق است که مردم باید حق اعتراض به حکومت داشته باشند.",
+    "importance": 85,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 6,
+    "node_type": "observation",
+    "content": "او نسبت به این نظر بی‌تفاوت است که به طور منظم پس‌انداز می‌کند.",
+    "importance": 70,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 7,
+    "node_type": "reflection",
+    "content": "من همیشه به این باور داشته‌ام که حق اعتراض و بیان نظرات از سوی مردم بسیار مهم است. زندگی در یک جامعه دموکراتیک به ما این امکان را می‌دهد که صدای خود را به گوش مسئولین برسانیم و از حقوق خود دفاع کنیم. به همین دلیل، من به این مسئله اهمیت می‌دهم و از آن حمایت می‌کنم. از طرف دیگر، به نظر می‌رسد که در برخی جنبه‌ها، مثل پس‌انداز مالی، چندان جدی نیستم. این بی‌تفاوتی شاید ناشی از اولویت‌های دیگرم باشد، مانند تمرکز بر کارم به عنوان تحلیلگر و پیگیری علاقه‌ام به بورس. به هر حال، این مشخصات شخصیتی من را به فردی با تفکر باز و در عین حال عملی تبدیل کرده است.",
+    "importance": 75,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": [
+      3,
+      5,
+      0,
+      2,
+      4,
+      6,
+      1
+    ]
+  }
+]

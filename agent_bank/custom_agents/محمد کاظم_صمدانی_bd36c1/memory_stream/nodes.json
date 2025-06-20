@@ -1,0 +1,82 @@
+[
+  {
+    "node_id": 0,
+    "node_type": "observation",
+    "content": "نام: محمد کاظم، نام خانوادگی: صمدانی، سن: 87، شغل: راننده، علایق: مطالعه، پژوهش",
+    "importance": 60,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 1,
+    "node_type": "observation",
+    "content": "برچسب‌ها: شیعه",
+    "importance": 70,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 2,
+    "node_type": "observation",
+    "content": "او در ویژگی «باز بودن به تجربه» نسبتاً بالا است.",
+    "importance": 75,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 3,
+    "node_type": "observation",
+    "content": "او کاملاً مخالف است که دین باید از سیاست جدا باشد.",
+    "importance": 75,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 4,
+    "node_type": "observation",
+    "content": "او موافق است که در سرمایه‌گذاری، حاضر به پذیرش ریسک برای سود بیشتر است.",
+    "importance": 85,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 5,
+    "node_type": "observation",
+    "content": "او کاملاً مخالف است که دین باید از سیاست جدا باشد.",
+    "importance": 75,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 6,
+    "node_type": "observation",
+    "content": "او موافق است که در سرمایه‌گذاری، حاضر به پذیرش ریسک برای سود بیشتر است.",
+    "importance": 75,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": null
+  },
+  {
+    "node_id": 7,
+    "node_type": "reflection",
+    "content": "من محمد کاظم صمدانی، یک راننده 87 ساله هستم که به مطالعه و پژوهش علاقه‌مندم. در طول زندگی‌ام، همواره به این نتیجه رسیده‌ام که دین و سیاست باید در کنار هم باشند و من به شدت مخالف تفکیک آنها هستم. این باور به من کمک کرده تا درک عمیق‌تری از مسائل اجتماعی و سیاسی داشته باشم. همچنین، در عرصه سرمایه‌گذاری، ریسک‌پذیری را یک اصل مهم می‌دانم و آماده‌ام تا برای دستیابی به سود بیشتر، ریسک‌هایی را بپذیرم. این دیدگاه‌ها و ویژگی‌های شخصیتی من، نشان‌دهنده باز بودن به تجربه و تمایل به یادگیری از زندگی است.",
+    "importance": 75,
+    "created": 0,
+    "last_retrieved": 0,
+    "pointer_id": [
+      4,
+      0,
+      6,
+      3,
+      5,
+      2,
+      1
+    ]
+  }
+]

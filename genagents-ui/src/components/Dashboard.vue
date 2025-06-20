@@ -3,7 +3,7 @@
     <h1 class="dashboard-title">داشبورد اصلی GenAgents</h1>
     <div class="dashboard-links">
       <router-link to="/create-character" class="dashboard-link active">ساخت شخصیت جدید</router-link>
-      <span class="dashboard-link disabled">لیست شخصیت‌ها (به‌زودی)</span>
+      <router-link to="/agents" class="dashboard-link">لیست شخصیت‌ها</router-link>
       <span class="dashboard-link disabled">محیط‌ها (به‌زودی)</span>
       <span class="dashboard-link disabled">چت با شخصیت (به‌زودی)</span>
     </div>
